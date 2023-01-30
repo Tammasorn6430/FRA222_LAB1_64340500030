@@ -48,20 +48,31 @@ struct PortPin{
 };
 
 struct PortPin R[4] = {
-		{GPIOA,GPIO_PIN_10},
-		{GPIOB,GPIO_PIN_3},
-		{GPIOB,GPIO_PIN_5},
-		{GPIOB,GPIO_PIN_4}
+		{GPIOA,GPIO_PIN_10}, //A10
+		{GPIOC,GPIO_PIN_9}, //C9
+		{GPIOB,GPIO_PIN_5}, //B5
+		{GPIOB,GPIO_PIN_8} //B8
 };
 
 struct PortPin L[4] = {
-		{GPIOA,GPIO_PIN_9},
-		{GPIOC,GPIO_PIN_7},
-		{GPIOB,GPIO_PIN_6},
-		{GPIOA,GPIO_PIN_7}
+		{GPIOA,GPIO_PIN_9}, //A9
+		{GPIOC,GPIO_PIN_7}, //C7
+		{GPIOB,GPIO_PIN_6}, //B6
+		{GPIOA,GPIO_PIN_7} //A7
 };
 
 uint16_t ButtonMatrix = 0;
+int state = 0;
+
+int num[] = {8,
+		  	4, 64, 1024,
+			2, 32, 512,
+			1, 16, 256};
+int cmd[] = {32768, 4096}; //ok, clear
+int empty[] = {128, 2048, 16384}; //empty switch
+int bs[] = {8192};
+
+int i = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -69,7 +80,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
-void ReadMatrixButtton_1Row();
+void ReadMatrixButton_1Row();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -112,15 +123,89 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
+  while (1){
     /* USER CODE END WHILE */
-	  static uint32_t timestamp = 0;
-	  if(HAL_GetTick()>= timestamp){
-		  timestamp = HAL_GetTick()+ 100;
-		  ReadMatrixButtton_1Row();
-	  }
+
     /* USER CODE BEGIN 3 */
+	  //state transition
+	  switch (state) {
+		case 0:
+			//initial LED off
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 0);
+			if (ButtonMatrix == num[6]) {state = 1;}
+			else if (ButtonMatrix == cmd[1]){state = 0;}
+			break;
+		case 1:
+			if (ButtonMatrix == num[4]) {state = 2;}
+			else if (ButtonMatrix == cmd[1]){state = 0;}
+//			else if (ButtonMatrix != cmd[0] && ButtonMatrix != empty[0] && ButtonMatrix != empty[1] && ButtonMatrix != empty[2]){state = 12; i = 1;};
+			break;
+		case 2:
+			if (ButtonMatrix == num[3]) {state = 3;}
+			else if (ButtonMatrix == cmd[1]){state = 0;}
+//			else if (ButtonMatrix != cmd[0] && ButtonMatrix != empty[0] && ButtonMatrix != empty[1] && ButtonMatrix != empty[2]){state = 12;};
+			break;
+		case 3:
+			if (ButtonMatrix == num[4]) {state = 4;}
+			else if (ButtonMatrix == cmd[1]){state = 0;}
+//			else if (ButtonMatrix != cmd[0] && ButtonMatrix != empty[0] && ButtonMatrix != empty[1] && ButtonMatrix != empty[2]){state = 12;};
+			break;
+		case 4:
+			if (ButtonMatrix == num[0]) {state = 5;}
+			else if (ButtonMatrix == cmd[1]){state = 0;}
+//			else if (ButtonMatrix != cmd[0] && ButtonMatrix != empty[0] && ButtonMatrix != empty[1] && ButtonMatrix != empty[2]){state = 12;};
+			break;
+		case 5:
+			if (ButtonMatrix == num[5]) {state = 6;}
+			else if (ButtonMatrix == cmd[1]){state = 0;}
+//			else if (ButtonMatrix != cmd[0] && ButtonMatrix != empty[0] && ButtonMatrix != empty[1] && ButtonMatrix != empty[2]){state = 12;};
+			break;
+		case 6:
+			if (ButtonMatrix == num[0]) {state = 7;}
+			else if (ButtonMatrix == cmd[1]){state = 0;}
+//			else if (ButtonMatrix != cmd[0] && ButtonMatrix != empty[0] && ButtonMatrix != empty[1] && ButtonMatrix != empty[2]){state = 12;};
+			break;
+		case 7:
+			if (ButtonMatrix == num[0]) {state = 8;}
+			else if (ButtonMatrix == cmd[1]){state = 0;}
+//			else if (ButtonMatrix != cmd[0] && ButtonMatrix != empty[0] && ButtonMatrix != empty[1] && ButtonMatrix != empty[2]){state = 12;};
+			break;
+		case 8:
+			if (ButtonMatrix == num[0]) {state = 9;}
+			else if (ButtonMatrix == cmd[1]){state = 0;}
+//			else if (ButtonMatrix != cmd[0] && ButtonMatrix != empty[0] && ButtonMatrix != empty[1] && ButtonMatrix != empty[2]){state = 12;};
+			break;
+		case 9:
+			if (ButtonMatrix == num[3]) {state = 10;}
+			else if (ButtonMatrix == cmd[1]){state = 0;}
+//			else if (ButtonMatrix != cmd[0] && ButtonMatrix != empty[0] && ButtonMatrix != empty[1] && ButtonMatrix != empty[2]){state = 12;};
+			break;
+		case 10:
+			if (ButtonMatrix == num[0]) {state = 11;}
+			else if (ButtonMatrix == cmd[1]){state = 0;}
+//			else if (ButtonMatrix != cmd[0] && ButtonMatrix != empty[0] && ButtonMatrix != empty[1] && ButtonMatrix != empty[2]){state = 12;};
+			break;
+		case 11: //last state
+			if (ButtonMatrix == cmd[0]) {
+				state = 11;
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
+			} //ok -> LED on
+			else if (ButtonMatrix == cmd[1]){
+				state = 0;
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 0);
+			} //clear -> LED off
+//			else if (ButtonMatrix != empty[0] && ButtonMatrix != empty[1] && ButtonMatrix != empty[2]){state = 12;}
+			break;
+		case 12: //case: input wrong number
+			if (ButtonMatrix == cmd[1]) {state = 0;} //clear
+			break;
+	  }
+	  static uint32_t timestamp = 0;
+	  	  if(HAL_GetTick()>= timestamp){
+	  		  timestamp = HAL_GetTick()+ 500;
+	  		  ReadMatrixButton_1Row();
+	  	  }
+
   }
   /* USER CODE END 3 */
 }
@@ -220,7 +305,13 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LD2_Pin|GPIO_PIN_10, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5|GPIO_PIN_8, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : B1_Pin */
   GPIO_InitStruct.Pin = B1_Pin;
@@ -235,26 +326,62 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pins : PA7 PA9 */
+  GPIO_InitStruct.Pin = GPIO_PIN_7|GPIO_PIN_9;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PC7 */
+  GPIO_InitStruct.Pin = GPIO_PIN_7;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PC9 */
+  GPIO_InitStruct.Pin = GPIO_PIN_9;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PA10 */
+  GPIO_InitStruct.Pin = GPIO_PIN_10;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PB5 PB8 */
+  GPIO_InitStruct.Pin = GPIO_PIN_5|GPIO_PIN_8;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PB6 */
+  GPIO_InitStruct.Pin = GPIO_PIN_6;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
 }
 
 /* USER CODE BEGIN 4 */
-void ReadMatrixButtton_1Row(){
-	static uint8_t x = 0;
-	register int i;
-	//read L1-L4
-	for(i=0;i<4;i++){
-		if(HAL_GPIO_ReadPin(L[i].PORT, L[i].PIN)){ // not pressed
-			ButtonMatrix &= ~(1<<(x*4+i)); //change group(y-axis) //(x*4+i) คือ x4เพื่อเปลี่ยนชุดoutput แล้ว+iเพื่อเริ่มตัวแรกแล้วเพิ่มไปเรื่อยๆ
-		}
-		else{
-			ButtonMatrix |= 1<<(x+4+i);
-		}
-
-	}
-	HAL_GPIO_WritePin(R[x].PORT, R[x].PIN, 1);
-	HAL_GPIO_WritePin(R[(x+1)%4].PORT, R[(x+1)%4].PIN, 0);
-	x++;
-	x %= 4;
+void ReadMatrixButton_1Row() {
+    static uint8_t X = 0;
+    register int i;
+    for (i = 0; i < 4; i++) {
+        if (HAL_GPIO_ReadPin(L[i].PORT, L[i].PIN)) {
+            ButtonMatrix &= ~(1 << (X * 4 + i));
+        } else {
+            ButtonMatrix |= 1 << (X * 4 + i);
+        }
+    }
+    HAL_GPIO_WritePin(R[X].PORT, R[X].PIN, 1);
+    HAL_GPIO_WritePin(R[(X + 1) % 4].PORT, R[(X + 1) % 4].PIN, 0);
+    X++;
+    X %= 4;
 }
 /* USER CODE END 4 */
 
