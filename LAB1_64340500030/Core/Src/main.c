@@ -64,19 +64,6 @@ struct PortPin L[4] = {
 uint16_t ButtonMatrix = 0;
 int state = 0;
 
-int num[] = {8,
-		  	4, 64, 1024,
-			2, 32, 512,
-			1, 16, 256};
-int cmd[] = {32768, 4096}; //ok, clear
-int empty[] = {128, 2048, 16384}; //empty switch
-int bs[] = {8192};
-
-int num_sw = 0;
-
-int i = 0;
-
-int m = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -85,7 +72,6 @@ static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
 void ReadMatrixButton_1Row();
-int chkIncNum(uint16_t incorrect_num, int correct_num);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -138,73 +124,61 @@ int main(void)
 			//initial LED off
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 0); //LED for ok
 			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, 0); //LED for state 12
-			num_sw = 6;
 			if (ButtonMatrix == 512) {state = 1;} //6
 			else if (ButtonMatrix == 4096){state = 0;} //clear
 			else if (ButtonMatrix != 0 && ButtonMatrix != 32768 && ButtonMatrix != 128 && ButtonMatrix != 2048 && ButtonMatrix != 16384){state = 12;}
 			break;
 		case 1:
-			num_sw = 4;
 			if (ButtonMatrix == 2) {state = 2;} //4
 			else if (ButtonMatrix == 4096){state = 0;} //clear
 			else if (ButtonMatrix != 512 && ButtonMatrix != 0 && ButtonMatrix != 32768 && ButtonMatrix != 128 && ButtonMatrix != 2048 && ButtonMatrix != 16384){state = 12;}
 			break;
 		case 2:
-			num_sw = 3;
 			if (ButtonMatrix == 1024) {state = 3;} //3
 			else if (ButtonMatrix == 4096){state = 0;} //clear
 			else if (ButtonMatrix != 2 && ButtonMatrix != 0 && ButtonMatrix != 32768 && ButtonMatrix != 128 && ButtonMatrix != 2048 && ButtonMatrix != 16384){state = 12;}			//else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
 			break;
 		case 3:
-			num_sw = 4;
 			if (ButtonMatrix == 2) {state = 4;} //4
 			else if (ButtonMatrix == 4096){state = 0;} //clear
 			else if (ButtonMatrix != 1024 && ButtonMatrix != 0 && ButtonMatrix != 32768 && ButtonMatrix != 128 && ButtonMatrix != 2048 && ButtonMatrix != 16384){state = 12;}			//else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
 			break;
 		case 4:
-			num_sw = 0;
 			if (ButtonMatrix == 8) {state = 5;} //0
 			else if (ButtonMatrix == 4096){state = 0;} //clear
 			else if (ButtonMatrix != 2 && ButtonMatrix != 0 && ButtonMatrix != 32768 && ButtonMatrix != 128 && ButtonMatrix != 2048 && ButtonMatrix != 16384){state = 12;}			//else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
 			break;
 		case 5:
-			num_sw = 5;
 			if (ButtonMatrix == 32) {state = 6;} //5
 			else if (ButtonMatrix == 4096){state = 0;} //clear
 			else if (ButtonMatrix != 8 && ButtonMatrix != 0 && ButtonMatrix != 32768 && ButtonMatrix != 128 && ButtonMatrix != 2048 && ButtonMatrix != 16384){state = 12;}			//else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
 			break;
 		case 6:
-			num_sw = 0;
 			if (ButtonMatrix == 8) {state = 7;} //0
 			else if (ButtonMatrix == 4096){state = 0;} //clear
 			else if (ButtonMatrix != 32 && ButtonMatrix != 0 && ButtonMatrix != 32768 && ButtonMatrix != 128 && ButtonMatrix != 2048 && ButtonMatrix != 16384){state = 12;}			//else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
 			break;
 		case 7:
-			num_sw = 0;
 			if (ButtonMatrix == 8) {state = 8;} //0
 			else if (ButtonMatrix == 4096){state = 0;} //clear
 			else if (ButtonMatrix != 8 && ButtonMatrix != 0 && ButtonMatrix != 32768 && ButtonMatrix != 128 && ButtonMatrix != 2048 && ButtonMatrix != 16384){state = 12;}			//else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
 			break;
 		case 8:
-			num_sw = 0;
 			if (ButtonMatrix == 8) {state = 9;} //0
 			else if (ButtonMatrix == 4096){state = 0;} //clear
 			else if (ButtonMatrix != 8 && ButtonMatrix != 0 && ButtonMatrix != 32768 && ButtonMatrix != 128 && ButtonMatrix != 2048 && ButtonMatrix != 16384){state = 12;}			//else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
 			break;
 		case 9:
-			num_sw = 3;
 			if (ButtonMatrix == 1024) {state = 10;} //3
 			else if (ButtonMatrix == 4096){state = 0;} //clear
 			else if (ButtonMatrix != 8 && ButtonMatrix != 0 && ButtonMatrix != 32768 && ButtonMatrix != 128 && ButtonMatrix != 2048 && ButtonMatrix != 16384){state = 12;}			//else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
 			break;
 		case 10:
-			num_sw = 0;
 			if (ButtonMatrix == 8) {state = 11;} //0
 			else if (ButtonMatrix == 4096){state = 0;} //clear
 			else if (ButtonMatrix != 1024 && ButtonMatrix != 0 && ButtonMatrix != 32768 && ButtonMatrix != 128 && ButtonMatrix != 2048 && ButtonMatrix != 16384){state = 12;}			//else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
 			break;
 		case 11: //last number
-			num_sw = 99;
 			if (ButtonMatrix == 32768) { //ok
 				state = 11;
 				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
@@ -409,16 +383,6 @@ void ReadMatrixButton_1Row() {
     HAL_GPIO_WritePin(R[(X + 1) % 4].PORT, R[(X + 1) % 4].PIN, 0);
     X++;
     X %= 4;
-}
-int chkIncNum(uint16_t incorrect_num, int correct_num){
-	for(int k=0; k<10; k++){
-		if(correct_num != num[k]){ //skip correct number
-			if (incorrect_num == num[k]) { //check if incorrect number in num[]
-				return 9;
-			}
-		}
-	}
-	return 7;
 }
 /* USER CODE END 4 */
 
