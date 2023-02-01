@@ -139,105 +139,92 @@ int main(void)
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 0); //LED for ok
 			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, 0); //LED for state 12
 			num_sw = 6;
-			if (ButtonMatrix == num[num_sw]) {state = 1;}
-			else if (ButtonMatrix == cmd[1]){state = 0;}
+			if (ButtonMatrix == 512) {state = 1;} //6
+			else if (ButtonMatrix == 4096){state = 0;} //clear
+			else if (ButtonMatrix != 0 && ButtonMatrix != 32768 && ButtonMatrix != 128 && ButtonMatrix != 2048 && ButtonMatrix != 16384){state = 12;}
 			break;
 		case 1:
 			num_sw = 4;
-			if (ButtonMatrix == num[num_sw]) {state = 2;}
-			else if (ButtonMatrix == cmd[1]){state = 0;}
-			else if (chkIncNum(ButtonMatrix, num_sw) == 9){
-				m = 12;
-				state = 12;
-			}
-//			else if (ButtonMatrix != cmd[0] && ButtonMatrix != empty[0] && ButtonMatrix != empty[1] && ButtonMatrix != empty[2]){state = 12; i = 1;};
+			if (ButtonMatrix == 2) {state = 2;} //4
+			else if (ButtonMatrix == 4096){state = 0;} //clear
+			else if (ButtonMatrix != 512 && ButtonMatrix != 0 && ButtonMatrix != 32768 && ButtonMatrix != 128 && ButtonMatrix != 2048 && ButtonMatrix != 16384){state = 12;}
 			break;
 		case 2:
 			num_sw = 3;
-			if (ButtonMatrix == num[num_sw]) {state = 3;}
-			else if (ButtonMatrix == cmd[1]){state = 0;}
-			else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
-//			else if (ButtonMatrix != cmd[0] && ButtonMatrix != empty[0] && ButtonMatrix != empty[1] && ButtonMatrix != empty[2]){state = 12;};
+			if (ButtonMatrix == 1024) {state = 3;} //3
+			else if (ButtonMatrix == 4096){state = 0;} //clear
+			else if (ButtonMatrix != 2 && ButtonMatrix != 0 && ButtonMatrix != 32768 && ButtonMatrix != 128 && ButtonMatrix != 2048 && ButtonMatrix != 16384){state = 12;}			//else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
 			break;
 		case 3:
 			num_sw = 4;
-			if (ButtonMatrix == num[num_sw]) {state = 4;}
-			else if (ButtonMatrix == cmd[1]){state = 0;}
-			else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
-//			else if (ButtonMatrix != cmd[0] && ButtonMatrix != empty[0] && ButtonMatrix != empty[1] && ButtonMatrix != empty[2]){state = 12;};
+			if (ButtonMatrix == 2) {state = 4;} //4
+			else if (ButtonMatrix == 4096){state = 0;} //clear
+			else if (ButtonMatrix != 1024 && ButtonMatrix != 0 && ButtonMatrix != 32768 && ButtonMatrix != 128 && ButtonMatrix != 2048 && ButtonMatrix != 16384){state = 12;}			//else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
 			break;
 		case 4:
 			num_sw = 0;
-			if (ButtonMatrix == num[num_sw]) {state = 5;}
-			else if (ButtonMatrix == cmd[1]){state = 0;}
-			else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
-//			else if (ButtonMatrix != cmd[0] && ButtonMatrix != empty[0] && ButtonMatrix != empty[1] && ButtonMatrix != empty[2]){state = 12;};
+			if (ButtonMatrix == 8) {state = 5;} //0
+			else if (ButtonMatrix == 4096){state = 0;} //clear
+			else if (ButtonMatrix != 2 && ButtonMatrix != 0 && ButtonMatrix != 32768 && ButtonMatrix != 128 && ButtonMatrix != 2048 && ButtonMatrix != 16384){state = 12;}			//else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
 			break;
 		case 5:
 			num_sw = 5;
-			if (ButtonMatrix == num[num_sw]) {state = 6;}
-			else if (ButtonMatrix == cmd[1]){state = 0;}
-			else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
-//			else if (ButtonMatrix != cmd[0] && ButtonMatrix != empty[0] && ButtonMatrix != empty[1] && ButtonMatrix != empty[2]){state = 12;};
+			if (ButtonMatrix == 32) {state = 6;} //5
+			else if (ButtonMatrix == 4096){state = 0;} //clear
+			else if (ButtonMatrix != 8 && ButtonMatrix != 0 && ButtonMatrix != 32768 && ButtonMatrix != 128 && ButtonMatrix != 2048 && ButtonMatrix != 16384){state = 12;}			//else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
 			break;
 		case 6:
 			num_sw = 0;
-			if (ButtonMatrix == num[num_sw]) {state = 7;}
-			else if (ButtonMatrix == cmd[1]){state = 0;}
-			else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
-//			else if (ButtonMatrix != cmd[0] && ButtonMatrix != empty[0] && ButtonMatrix != empty[1] && ButtonMatrix != empty[2]){state = 12;};
+			if (ButtonMatrix == 8) {state = 7;} //0
+			else if (ButtonMatrix == 4096){state = 0;} //clear
+			else if (ButtonMatrix != 32 && ButtonMatrix != 0 && ButtonMatrix != 32768 && ButtonMatrix != 128 && ButtonMatrix != 2048 && ButtonMatrix != 16384){state = 12;}			//else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
 			break;
 		case 7:
 			num_sw = 0;
-			if (ButtonMatrix == num[num_sw]) {state = 8;}
-			else if (ButtonMatrix == cmd[1]){state = 0;}
-			else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
-//			else if (ButtonMatrix != cmd[0] && ButtonMatrix != empty[0] && ButtonMatrix != empty[1] && ButtonMatrix != empty[2]){state = 12;};
+			if (ButtonMatrix == 8) {state = 8;} //0
+			else if (ButtonMatrix == 4096){state = 0;} //clear
+			else if (ButtonMatrix != 8 && ButtonMatrix != 0 && ButtonMatrix != 32768 && ButtonMatrix != 128 && ButtonMatrix != 2048 && ButtonMatrix != 16384){state = 12;}			//else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
 			break;
 		case 8:
 			num_sw = 0;
-			if (ButtonMatrix == num[num_sw]) {state = 9;}
-			else if (ButtonMatrix == cmd[1]){state = 0;}
-			else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
-//			else if (ButtonMatrix != cmd[0] && ButtonMatrix != empty[0] && ButtonMatrix != empty[1] && ButtonMatrix != empty[2]){state = 12;};
+			if (ButtonMatrix == 8) {state = 9;} //0
+			else if (ButtonMatrix == 4096){state = 0;} //clear
+			else if (ButtonMatrix != 8 && ButtonMatrix != 0 && ButtonMatrix != 32768 && ButtonMatrix != 128 && ButtonMatrix != 2048 && ButtonMatrix != 16384){state = 12;}			//else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
 			break;
 		case 9:
 			num_sw = 3;
-			if (ButtonMatrix == num[num_sw]) {state = 10;}
-			else if (ButtonMatrix == cmd[1]){state = 0;}
-			else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
-//			else if (ButtonMatrix != cmd[0] && ButtonMatrix != empty[0] && ButtonMatrix != empty[1] && ButtonMatrix != empty[2]){state = 12;};
+			if (ButtonMatrix == 1024) {state = 10;} //3
+			else if (ButtonMatrix == 4096){state = 0;} //clear
+			else if (ButtonMatrix != 8 && ButtonMatrix != 0 && ButtonMatrix != 32768 && ButtonMatrix != 128 && ButtonMatrix != 2048 && ButtonMatrix != 16384){state = 12;}			//else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
 			break;
 		case 10:
 			num_sw = 0;
-			if (ButtonMatrix == num[num_sw]) {state = 11;}
-			else if (ButtonMatrix == cmd[1]){state = 0;}
-			else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
-//			else if (ButtonMatrix != cmd[0] && ButtonMatrix != empty[0] && ButtonMatrix != empty[1] && ButtonMatrix != empty[2]){state = 12;};
+			if (ButtonMatrix == 8) {state = 11;} //0
+			else if (ButtonMatrix == 4096){state = 0;} //clear
+			else if (ButtonMatrix != 1024 && ButtonMatrix != 0 && ButtonMatrix != 32768 && ButtonMatrix != 128 && ButtonMatrix != 2048 && ButtonMatrix != 16384){state = 12;}			//else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
 			break;
-		case 11: //last state
+		case 11: //last number
 			num_sw = 99;
-			if (ButtonMatrix == cmd[0]) {
+			if (ButtonMatrix == 32768) { //ok
 				state = 11;
 				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
 			} //ok -> LED on
-			else if (ButtonMatrix == cmd[1]){
+			else if (ButtonMatrix == 4096){  //clear
 				state = 0;
 				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 0);
 			} //clear -> LED off
-			else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
-//			else if (ButtonMatrix != empty[0] && ButtonMatrix != empty[1] && ButtonMatrix != empty[2]){state = 12;}
+			else if (ButtonMatrix != 8 && ButtonMatrix != 0 && ButtonMatrix != 32768 && ButtonMatrix != 128 && ButtonMatrix != 2048 && ButtonMatrix != 16384){state = 12;}			//else if (chkIncNum(ButtonMatrix, num_sw)){state = 12;}
 			break;
-		case 12: //case: input wrong number
+		case 12: //input wrong number
 			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, 1);
-			if (ButtonMatrix == cmd[1]) {state = 0;} //clear
+			if (ButtonMatrix == 4096) {state = 0;} //clear
 			break;
 	  }
 	  static uint32_t timestamp = 0;
-	  	  if(HAL_GetTick()>= timestamp){
-	  		  timestamp = HAL_GetTick()+ 100;
-	  		  ReadMatrixButton_1Row();
-	  	  }
+	  if(HAL_GetTick()>= timestamp){
+		  timestamp = HAL_GetTick()+ 100;
+		  ReadMatrixButton_1Row();
+	  }
 
   }
   /* USER CODE END 3 */
@@ -344,7 +331,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5|GPIO_PIN_8, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5|GPIO_PIN_8|LED_incorrect_number_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : B1_Pin */
   GPIO_InitStruct.Pin = B1_Pin;
@@ -397,6 +384,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : LED_incorrect_number_Pin */
+  GPIO_InitStruct.Pin = LED_incorrect_number_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(LED_incorrect_number_GPIO_Port, &GPIO_InitStruct);
 
 }
 
